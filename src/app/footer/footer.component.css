@@ -1,0 +1,10 @@
+.footer__content-bottom-wrapper a{
+    color: #3e3e3e!important;
+}
+footer{
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+    background: #d4d4d4;
+    padding: 10px;
+}

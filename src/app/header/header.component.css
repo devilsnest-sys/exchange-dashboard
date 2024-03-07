@@ -1,0 +1,8 @@
+.menu-item {
+    display: flex;
+    gap: 30px;
+}
+header{
+    padding: 10px 0;
+    
+}
