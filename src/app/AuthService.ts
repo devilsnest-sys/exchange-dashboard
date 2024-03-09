@@ -9,12 +9,13 @@ export class AuthService {
   constructor() { }
 
   login(): void {
-    this.isLoggedIn = true;
+    this.isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
     localStorage.setItem('isLoggedIn', 'true');
   }
 
   logout(): void {
     this.isLoggedIn = false;
+    sessionStorage.setItem('isLoggedIn', 'true');
     localStorage.removeItem('isLoggedIn');
   }
 
