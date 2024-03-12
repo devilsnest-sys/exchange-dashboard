@@ -1,26 +1,37 @@
 <div class="container mt-5">
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <h3>Customer Number Form</h3>
             <form [formGroup]="customerForm">
                 <div class="mb-3">
                     <label for="customerNumber" class="form-label">Customer Number</label>
                     <input type="text" class="form-control" id="customerNumber" formControlName="customerNumber"
-                        placeholder="Enter Customer Number">
+                        placeholder="Enter Customer Number" />
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-4">
             <h3>Order ID Form</h3>
             <form [formGroup]="orderForm" (ngSubmit)="onOrderSubmit()">
                 <div class="mb-3">
-                  <label for="orderID" class="form-label">Order ID</label>
-                  <input type="text" class="form-control" id="orderID" formControlName="orderID"
-                    placeholder="Enter Order ID">
+                    <label for="orderID" class="form-label">Order ID</label>
+                    <input type="text" class="form-control" id="orderID" formControlName="orderID"
+                        placeholder="Enter Order ID" />
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
-              </form>        
+            </form>
+        </div>
+        <div class="col-lg-4">
+            <h3>Product SKU</h3>
+            <form [formGroup]="prodForm" (ngSubmit)="onProdSubmit()">
+                <div class="mb-3">
+                    <label for="orderID" class="form-label">Order ID</label>
+                    <input type="text" class="form-control" id="ProdSku" formControlName="ProdSku"
+                        placeholder="Enter Product SKU" />
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
         </div>
     </div>
 </div>
@@ -28,7 +39,7 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card p-3 mt-4">
-                <table class="table table-bordered table-sm">
+                <table class="table table-bordered table-sm" *ngIf="orders.length">
                     <thead>
                         <tr>
                             <th>Serial No.</th>
@@ -53,49 +64,64 @@
                             <td>{{ order.phone }}</td>
                             <td>
                                 <ul>
-                                    <li *ngFor="let item of order.line_items ; let i = index">
-                                        {{ serialNumber + i }} <input type="checkbox" [(ngModel)]="item.checked">  SKU: {{ item.sku }} - {{ item.title }} 
+                                    <li *ngFor="let item of order.line_items.concat(checkedProducts); let i = index">
+                                        {{ i + 1 }}
+                                        <input type="checkbox" [(ngModel)]="item.checked"/>
+                                        {{ item.title }}  {{ item.variants?.[0]?.price || item.variants?.price }}
                                     </li>
                                 </ul>
                             </td>
                             <td>
-                                <ul *ngFor="let item of order.line_items ; let i = index">
+                                <ul *ngFor="let item of order.line_items.concat(checkedProducts); let i = index">
                                     <li>
-                                        {{ item.price }} 
+                                        {{ item.price }} {{ item.variants?.[0]?.price || item.variants?.price }}
                                     </li>
                                 </ul>
                             </td>
-                            <td><button class="btn btn-danger btn-sm" (click)="removeCheckedItems()">Delete</button></td>
-                            <td><span *ngIf="subtotal">{{ subtotal }}</span></td>
+                            <td>
+                                <button class="btn btn-danger btn-sm" (click)="removeCheckedItems()">
+                                    Delete
+                                </button>
+                            </td>
+                            <td>
+                                <span *ngIf="subtotal">{{ subtotal }}</span>
+                            </td>
                         </tr>
-                            
                     </tbody>
                 </table>
+                <div *ngIf="orders.length === 0">No Orders found.</div>
+
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row mt-4">
         <div class="col-lg-12">
-            <div class="products">
-                <mat-form-field>
-                    <input type="text" placeholder="Search products" matInput [formControl]="productCtrl" [matAutocomplete]="auto">
-                    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayFn">
-                      <mat-option *ngFor="let product of filteredProducts | async" [value]="product" (onSelectionChange)="addProduct($event)">
-                        {{ product.name }}
-                      </mat-option>
-                    </mat-autocomplete>
-                  </mat-form-field>
-                  
-                  
-                  <div *ngIf="selectedProducts.length > 0">
-                    <h3>Selected Products:</h3>
-                    <ul>
-                      <li *ngFor="let product of selectedProducts">
-                        {{ product.name }} <button mat-icon-button (click)="removeProduct(product)"><mat-icon>clear</mat-icon></button>
-                      </li>
-                    </ul>
-                  </div>
-                  
+            <div class="card p-3">
+                <table class="table table-bordered table-sm mt-4" *ngIf="products.length">
+                    <thead>
+                        <tr>
+                            <th>SKU</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Inventory</th>
+                            <th>Category</th>
+                            <th>Status</th>
+                            <th>Select Product</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let product of products">
+                            <td>{{ product.variants[0].sku }}</td>
+                            <td>{{ product.title }}</td>
+                            <td>{{ product.variants[0].price }}</td>
+                            <td>{{ product.variants[0].inventory_quantity }}</td>
+                            <td>{{ product.product_type }}</td>
+                            <td>{{ product.status }}</td>
+                            <td><input type="checkbox" [value]="product" (change)="onProductCheckboxChange($event, product)" /></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div *ngIf="products.length === 0">No products found.</div>
             </div>
         </div>
     </div>

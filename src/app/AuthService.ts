@@ -1,3 +1,4 @@
+import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 
 @Injectable({
@@ -5,21 +6,38 @@ import { Injectable } from '@angular/core';
 })
 export class AuthService {
   private isLoggedIn: boolean = false;
+  private tokenKey = 'auth_token';
 
-  constructor() { }
+  constructor(private http: HttpClient) { 
+    this.isLoggedIn = localStorage.getItem('isLoggedIn') === 'true';
+    window.addEventListener('beforeunload', () => {
+      this.logoutOnClose();
+    });
+  }
 
   login(): void {
-    this.isLoggedIn = sessionStorage.getItem('isLoggedIn') === 'true';
+    this.isLoggedIn = true;
     localStorage.setItem('isLoggedIn', 'true');
   }
 
   logout(): void {
     this.isLoggedIn = false;
-    sessionStorage.setItem('isLoggedIn', 'true');
     localStorage.removeItem('isLoggedIn');
+    sessionStorage.clear(); // Clear session storage
+  }
+
+  logoutOnClose() {
+    if (this.isLoggedIn) {
+      const token = localStorage.getItem(this.tokenKey);
+      if (token) {
+        this.http.post('logout-url', { token }).subscribe(() => {
+          localStorage.removeItem(this.tokenKey);
+        });
+      }
+    }
   }
 
   isAuthenticated(): boolean {
-    return this.isLoggedIn || localStorage.getItem('isLoggedIn') === 'true';
+    return this.isLoggedIn;
   }
 }

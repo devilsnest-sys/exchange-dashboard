@@ -13,7 +13,11 @@ export class ShopifyService {
     return this.http.get<any>('http://localhost:5000/orders/' + orderId);
     //  return this.http.get<any[]>('http://localhost:5000/orders/');
   }
-  getProducts(): Observable<any> {
-    return this.http.get<any>('http://localhost:5000/products');
+  getProductBySku(sku: string): Observable<any[]> {
+    return this.http.get<any[]>(`http://localhost:5000/products/${sku}`);
   }
+  // getProducts(): Observable<any[]> {
+  //   return this.http.get<any[]>('http://localhost:5000/products');
+  // }
+  
 }
