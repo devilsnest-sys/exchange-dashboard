@@ -23,7 +23,7 @@ export class AuthService {
   logout(): void {
     this.isLoggedIn = false;
     localStorage.removeItem('isLoggedIn');
-    sessionStorage.clear(); // Clear session storage
+    sessionStorage.clear(); 
   }
 
   logoutOnClose() {

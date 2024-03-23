@@ -6,7 +6,7 @@ import { AuthService } from '../AuthService';
   styleUrls: ['./header.component.css']
 })
 export class HeaderComponent {
-  constructor( private authService: AuthService) { }
+  constructor( public authService: AuthService) { }
   logout(): void {
     this.authService.logout();
     window.location.reload();

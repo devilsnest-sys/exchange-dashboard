@@ -6,9 +6,8 @@
                     <div class="logo"><img src="../../assets/images/sg-logo-center.png" class="img-fluid" alt="SG Logo"></div>
                     <div class="menu-nav">
                         <ul class="menu-item">
-                            <li><a  routerLink="/login">Login</a></li>
-                            <li><a (click)="logout()">Logout</a></li>
-                            <!-- <li></li> -->
+                            <li *ngIf="!authService.isAuthenticated()"><a routerLink="/login" class="btn btn-success">Login</a></li>
+                            <li *ngIf="authService.isAuthenticated()"><a (click)="logout()" class="btn btn-warning">Logout</a></li>
                         </ul>
                     </div>
                 </div>
